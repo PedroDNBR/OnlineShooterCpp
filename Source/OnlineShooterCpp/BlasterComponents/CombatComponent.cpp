@@ -29,7 +29,6 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	if (Character)
 	{
 		Character->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
@@ -40,13 +39,13 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	SetHudCrosshairs(DeltaTime);
+	SetHUDCrosshairs(DeltaTime);
 }
 
-void UCombatComponent::SetHudCrosshairs(float DeltaTime)
+void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 {
-	if (Character == nullptr || Character->Controller) return;
-	
+	if (Character == nullptr || Character->Controller == nullptr) return;
+
 	Controller = Controller == nullptr ? Cast<ABlasterPlayerController>(Character->Controller) : Controller;
 	if (Controller)
 	{
@@ -57,19 +56,20 @@ void UCombatComponent::SetHudCrosshairs(float DeltaTime)
 			if (EquippedWeapon)
 			{
 				HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
-				HUDPackage.CrosshairLeft = EquippedWeapon->CrosshairLeft;
-				HUDPackage.CrosshairRight = EquippedWeapon->CrosshairRight;
-				HUDPackage.CrosshairBottom = EquippedWeapon->CrosshairBottom;
+				HUDPackage.CrosshairsLeft = EquippedWeapon->CrosshairsLeft;
+				HUDPackage.CrosshairsRight = EquippedWeapon->CrosshairsRight;
+				HUDPackage.CrosshairsBottom = EquippedWeapon->CrosshairsBottom;
+				HUDPackage.CrosshairsTop = EquippedWeapon->CrosshairsTop;
 			}
 			else
 			{
 				HUDPackage.CrosshairsCenter = nullptr;
-				HUDPackage.CrosshairLeft = nullptr;
-				HUDPackage.CrosshairRight = nullptr;
-				HUDPackage.CrosshairBottom = nullptr;
+				HUDPackage.CrosshairsLeft = nullptr;
+				HUDPackage.CrosshairsRight = nullptr;
+				HUDPackage.CrosshairsBottom = nullptr;
+				HUDPackage.CrosshairsTop = nullptr;
 			}
 			HUD->SetHUDPackage(HUDPackage);
-
 		}
 	}
 }

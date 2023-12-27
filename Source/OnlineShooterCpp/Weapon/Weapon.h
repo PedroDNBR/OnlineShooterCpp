@@ -33,16 +33,16 @@ public:
 	class UTexture2D* CrosshairsCenter;
 
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
-	UTexture2D* CrosshairLeft;
+	UTexture2D* CrosshairsLeft;
 
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
-	UTexture2D* CrosshairRight;
+	UTexture2D* CrosshairsRight;
 
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
-	UTexture2D* CrosshairTop;
+	UTexture2D* CrosshairsTop;
 
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
-	UTexture2D* CrosshairBottom;
+	UTexture2D* CrosshairsBottom;
 
 protected:
 	virtual void BeginPlay() override;
