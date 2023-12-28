@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "../../OnlineShooterCpp/Types/TurningInPlace.h"
+#include "../Types/TurningInPlace.h"
+#include "../Interfaces/InteractWithCorsshairsInterface.h"
 #include "BlasterCharacter.generated.h"
 
 UCLASS()
-class ONLINESHOOTERCPP_API ABlasterCharacter : public ACharacter
+class ONLINESHOOTERCPP_API ABlasterCharacter : public ACharacter, public IInteractWithCorsshairsInterface
 {
 	GENERATED_BODY()
 
