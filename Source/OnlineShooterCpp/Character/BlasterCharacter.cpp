@@ -12,6 +12,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "BlasterAnimInstance.h"
+#include "OnlineShooterCpp/PlayerController/BlasterPlayerController.h"
 #include "OnlineShooterCpp/OnlineShooterCpp.h"
 
 ABlasterCharacter::ABlasterCharacter()
@@ -52,6 +53,11 @@ void ABlasterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	BlasterPlayerController = Cast<ABlasterPlayerController>(Controller);
+	if (BlasterPlayerController)
+	{
+		BlasterPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
 }
 
 void ABlasterCharacter::Tick(float DeltaTime)
