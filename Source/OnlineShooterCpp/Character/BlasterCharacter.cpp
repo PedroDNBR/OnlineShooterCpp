@@ -125,6 +125,15 @@ void ABlasterCharacter::PlayFireMontage(bool bAiming)
 	}
 }
 
+void ABlasterCharacter::PlayElimMontage()
+{
+	UAnimInstance* AnimInstace = GetMesh()->GetAnimInstance();
+	if (AnimInstace && ElimMontage)
+	{
+		AnimInstace->Montage_Play(ElimMontage);
+	}
+}
+
 void ABlasterCharacter::OnRep_ReplicatedMovement()
 {
 	Super::OnRep_ReplicatedMovement();
@@ -132,9 +141,10 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
 	TimeSinceLastMovementReplication = 0.f;
 }
 
-void ABlasterCharacter::Elim()
+void ABlasterCharacter::Elim_Implementation()
 {
-
+	bElimned = true;
+	PlayElimMontage();
 }
 
 void ABlasterCharacter::PlayHitReactMontage()
