@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "OnlineShooterCpp/Types/TurningInPlace.h"
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "../../OnlineShooterCpp/Types/TurningInPlace.h"
 #include "BlasterAnimInstance.generated.h"
 
 /**

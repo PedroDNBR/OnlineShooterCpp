@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "OnlineShooterCpp/Types/TurningInPlace.h"
+#include "OnlineShooterCpp/Interfaces/InteractWithCorsshairsInterface.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
-#include "../Types/TurningInPlace.h"
-#include "../Interfaces/InteractWithCorsshairsInterface.h"
 #include "BlasterCharacter.generated.h"
 
 UCLASS()
@@ -124,6 +125,28 @@ private:
 	float ElimDelay = 3.f;
 
 	void ElimTimerFinished();
+
+	/*
+	* Dissolve Effect
+	*/
+	UPROPERTY(VisibleAnywhere)
+	UTimelineComponent* DissolveTimeline;
+	FOnTimelineFloat DissolveTrack;
+
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* DissolveCurve;
+
+	UFUNCTION()
+	void UpdateDissolveMaterial(float DissolveValue);
+	void StartDissolve();
+
+	// Dynamic instance that we can change at runtime
+	UPROPERTY(VisibleAnywhere, Category = "Elim")
+	UMaterialInstanceDynamic* DynamicDissolveMaterialInstance;
+
+	// Material instance set on blueprint, used with the dynamic material instance
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* DissolveMaterialInstance;
 
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
