@@ -11,11 +11,14 @@
 #include "OnlineShooterCpp/BlasterComponents/CombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "BlasterAnimInstance.h"
 #include "OnlineShooterCpp/PlayerController/BlasterPlayerController.h"
 #include "OnlineShooterCpp/OnlineShooterCpp.h"
 #include "OnlineShooterCpp/GameMode/BlasterGameMode.h"
 #include "TimerManager.h"
+#include "Sound/SoundCue.h"
+#include "Particles/ParticleSystemComponent.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -161,6 +164,16 @@ void ABlasterCharacter::Elim()
 	);
 }
 
+void ABlasterCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	if (ElimBotComponent)
+	{
+		ElimBotComponent->DestroyComponent();
+	}
+}
+
 void ABlasterCharacter::MulticastElim_Implementation()
 {
 	bElimned = true;
@@ -186,6 +199,26 @@ void ABlasterCharacter::MulticastElim_Implementation()
 	// Disable Collision
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//Spawn Elim Bot
+	if (ElimBotEffect)
+	{
+		FVector ElimBotSpawnPoint(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 200.f);
+		ElimBotComponent = UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			ElimBotEffect,
+			ElimBotSpawnPoint,
+			GetActorRotation()
+		);
+		if (ElimBotSound)
+		{
+			UGameplayStatics::SpawnSoundAtLocation(
+				this,
+				ElimBotSound,
+				GetActorLocation()
+			);
+		}
+	}
 
 }
 
