@@ -178,6 +178,10 @@ void ABlasterCharacter::Destroyed()
 
 void ABlasterCharacter::MulticastElim_Implementation()
 {
+	if (BlasterPlayerController)
+	{
+		BlasterPlayerController->SetHUDWeaponAmmo(0);
+	}
 	bElimned = true;
 	PlayElimMontage();
 	// Start dissolve effect
