@@ -2,7 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "../HUD/BlasterHUD.h"
+#include "OnlineShooterCpp/HUD/BlasterHUD.h"
+#include "OnlineShooterCpp/Weapon/WeaponTypes.h"
 #include "CombatComponent.generated.h"
 
 #define TRACE_LENGTH 80000.f
@@ -104,4 +105,17 @@ private:
 
 	bool CanFire();
 
+	// Caried Ammo for the currently equiped weapon
+	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)
+	int32 CarriedAmmo;
+
+	UFUNCTION()
+	void OnRep_CarriedAmmo();
+
+	TMap<EWeaponType, int32> CarriedAmmoMap;
+
+	UPROPERTY(EditAnywhere)
+	int32 StartingARAmmo = 60;
+
+	void InitializeCarriedAmmo();
 };
