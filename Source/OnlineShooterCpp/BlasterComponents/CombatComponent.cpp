@@ -25,6 +25,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(UCombatComponent, EquippedWeapon);
 	DOREPLIFETIME(UCombatComponent, bAiming);
+	DOREPLIFETIME_CONDITION(UCombatComponent, CarriedAmmo, COND_OwnerOnly);
 }
 
 void UCombatComponent::BeginPlay()
@@ -59,7 +60,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UCombatComponent::Fire()
 {
-	if (bCanFire)
+	if (CanFire())
 	{
 		ServerFire(HitTarget);
 		if (EquippedWeapon)
@@ -68,6 +69,12 @@ void UCombatComponent::Fire()
 		}
 		StartFireTimer();
 	}
+}
+
+bool UCombatComponent::CanFire()
+{
+	if (EquippedWeapon == nullptr) return false;
+	return !EquippedWeapon->IsEmpty() || !bCanFire;
 }
 
 void UCombatComponent::StartFireTimer()
@@ -90,6 +97,11 @@ void UCombatComponent::FireTimerFinished()
 	{
 		Fire();
 	}
+}
+
+void UCombatComponent::OnRep_CarriedAmmo()
+{
+
 }
 
 void UCombatComponent::FireButtonPressed(bool bPressed)
