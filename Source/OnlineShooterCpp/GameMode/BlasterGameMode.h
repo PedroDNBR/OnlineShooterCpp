@@ -15,7 +15,20 @@ class ONLINESHOOTERCPP_API ABlasterGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
+	ABlasterGameMode();
+	virtual void Tick(float DeltaTime) override;
 	virtual void PlayerEliminated(class ABlasterCharacter* ElimnedCharacter, class ABlasterPlayerController* VictimController, ABlasterPlayerController* AttackerController);
 	virtual void RequestRespawn(class ACharacter* ElimnedCharacter, AController* ElimnedController);
+	
+	UPROPERTY(EditDefaultsOnly);
+	float WarmupTime = 10.f;
+
+	float LevelStartingTime = 0.f;
+
+protected:
+	void BeginPlay() override;
+
+private:
+	float CountdownTime = 0.f;
 
 };
