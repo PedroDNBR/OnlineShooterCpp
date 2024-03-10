@@ -7,8 +7,6 @@
 #include "OnlineShooterCpp/Types/CombatState.h"
 #include "CombatComponent.generated.h"
 
-#define TRACE_LENGTH 80000.f
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ONLINESHOOTERCPP_API UCombatComponent : public UActorComponent
 {
@@ -136,6 +134,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	int32 StartingSMGAmmo = 30;
+
+	UPROPERTY(EditAnywhere)
+	int32 StartingShotgunAmmo = 10;
 
 	void InitializeCarriedAmmo();
 	
