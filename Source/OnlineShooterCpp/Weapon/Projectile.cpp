@@ -6,6 +6,8 @@
 #include "Sound/SoundCue.h"
 #include "OnlineShooterCpp/Character/BlasterCharacter.h"
 #include "OnlineShooterCpp/OnlineShooterCpp.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 AProjectile::AProjectile()
 {
@@ -56,6 +58,47 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	MultiCast_OnHit();
 }
 
+void AProjectile::SpawnTrailSystem()
+{
+	if (TrailSystem)
+	{
+		TrailSystemComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			TrailSystem,
+			GetRootComponent(),
+			FName(),
+			GetActorLocation(),
+			GetActorRotation(),
+			EAttachLocation::KeepWorldPosition,
+			false
+		);
+	}
+}
+
+void AProjectile::ExplodeDamage()
+{
+	APawn* FiringPawn = GetInstigator();
+	if (FiringPawn && HasAuthority())
+	{
+		AController* FiringController = FiringPawn->GetController();
+		if (FiringController)
+		{
+			UGameplayStatics::ApplyRadialDamageWithFalloff(
+				this, // World Context Object
+				Damage, // Base Damage
+				10.f, // Minimum Damage
+				GetActorLocation(), // Origin
+				DamageInnerRadius,
+				DamageOuterRadius,
+				1.f, // Damage Falloff
+				UDamageType::StaticClass(), // DamageTypeClass
+				TArray<AActor*>(), // Ignore Actors
+				this, // Damage Causer
+				FiringController // Instigator Controller
+			);
+		}
+	}
+}
+
 void AProjectile::MultiCast_OnHit_Implementation()
 {
 	Destroy();
@@ -64,6 +107,21 @@ void AProjectile::MultiCast_OnHit_Implementation()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AProjectile::StartDestroyTimer()
+{
+	GetWorldTimerManager().SetTimer(
+		DestroyTimer,
+		this,
+		&AProjectile::DestroyTimerFinished,
+		DestroyTime
+	);
+}
+
+void AProjectile::DestroyTimerFinished()
+{
+	Destroy();
 }
 
 void AProjectile::Destroyed()
