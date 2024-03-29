@@ -5,6 +5,7 @@
 #include "OnlineShooterCpp/HUD/BlasterHUD.h"
 #include "OnlineShooterCpp/Weapon/WeaponTypes.h"
 #include "OnlineShooterCpp/Types/CombatState.h"
+#include "OnlineShooterCpp/Character/BlasterAnimInstance.h"
 #include "CombatComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -26,6 +27,11 @@ public:
 	void FinishReloading();
 
 	void FireButtonPressed(bool bPressed);
+
+	UFUNCTION(BlueprintCallable)
+	void ShotgunShellReload();
+
+	void JumpToShotgunEnd();
 
 protected:
 	virtual void BeginPlay() override;
@@ -136,7 +142,7 @@ private:
 	int32 StartingSMGAmmo = 30;
 
 	UPROPERTY(EditAnywhere)
-	int32 StartingShotgunAmmo = 10;
+	int32 StartingShotgunAmmo = 5;
 
 	UPROPERTY(EditAnywhere)
 	int32 StartingSniperAmmo = 10;
@@ -153,4 +159,7 @@ private:
 	void OnRep_CombatState();
 
 	void UpdateAmmoValues();
+
+	void UpdateShotgunAmmoValues();
+
 };
