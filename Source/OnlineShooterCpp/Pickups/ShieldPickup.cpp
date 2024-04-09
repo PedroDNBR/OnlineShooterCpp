@@ -1,8 +1,8 @@
-#include "HealthPickup.h"
+#include "ShieldPickup.h"
 #include "OnlineShooterCpp/Character/BlasterCharacter.h"
 #include "OnlineShooterCpp/BlasterComponents/BuffComponent.h"
 
-void AHealthPickup::OnSphereOverlap(
+void AShieldPickup::OnSphereOverlap(
 	UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,
 	UPrimitiveComponent* OtherComp,
@@ -26,7 +26,7 @@ void AHealthPickup::OnSphereOverlap(
 		UBuffComponent* Buff = BlasterCharacter->GetBuff();
 		if (Buff)
 		{
-			Buff->Heal(HealAmount, HealingTime);
+			Buff->ReplenishShield(ShieldReplenishAmount, ShieldReplenishTime);
 		}
 	}
 
