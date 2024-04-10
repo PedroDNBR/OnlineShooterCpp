@@ -192,7 +192,14 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 	if (Character == nullptr || WeaponToEquip == nullptr) return;
 	if (CombatState != ECombatState::ECS_Unoccupied) return;
 
-	DropEquippedWeapon();
+	if (EquippedWeapon && EquippedWeapon->bDestroyWeapon)
+	{
+		EquippedWeapon->Destroy();
+	}
+	else 
+	{
+		DropEquippedWeapon();
+	}
 	
 	EquippedWeapon = WeaponToEquip;
 	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
