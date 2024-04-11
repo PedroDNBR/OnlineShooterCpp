@@ -131,6 +131,7 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("LookUp", this, &ABlasterCharacter::LookUp);
 
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ABlasterCharacter::EquipButtonPressed);
+	PlayerInputComponent->BindAction("SwapWeapon", IE_Pressed, this, &ABlasterCharacter::SwapWeaponButtonPressed);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABlasterCharacter::CrouchButtonPressed);
 
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ABlasterCharacter::AimButtonPressed);
@@ -454,6 +455,15 @@ void ABlasterCharacter::EquipButtonPressed()
 	}
 }
 
+void ABlasterCharacter::SwapWeaponButtonPressed()
+{
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		ServerSwapWeaponButtonPressed();
+	}
+}
+
 void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
 {
 	if (Combat)
@@ -462,10 +472,15 @@ void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
 		{
 			Combat->EquipWeapon(OverlappingWeapon);
 		}
-		else if (Combat->ShouldSwapWeapons())
-		{
-			Combat->SwapWeapons();
-		}
+	}
+}
+
+void ABlasterCharacter::ServerSwapWeaponButtonPressed_Implementation()
+{
+	if (Combat == nullptr) return;
+	if (Combat && Combat->ShouldSwapWeapons() && Combat->CombatState == ECombatState::ECS_Unoccupied)
+	{
+		Combat->SwapWeapons();
 	}
 }
 
