@@ -40,7 +40,7 @@ public:
 	void LaunchGrenade();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerLaunchGrenade(const FVector_NetQuantize& Target);
+	void ServerLaunchGrenade(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 
 	void PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount);
 
@@ -60,9 +60,9 @@ protected:
 	void Fire();
 
 	UFUNCTION(Server, Reliable)
-	void ServerFire(const FVector_NetQuantize& TraceHitTarget);
+	void ServerFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastFire(const FVector_NetQuantize& TraceHitTarget);
+	void MulticastFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 

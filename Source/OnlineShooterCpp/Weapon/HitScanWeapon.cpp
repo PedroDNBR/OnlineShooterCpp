@@ -11,9 +11,9 @@
 #include "WeaponTypes.h"
 #include "DrawDebugHelpers.h"
 
-void AHitScanWeapon::Fire(const FVector& HitTarget)
+void AHitScanWeapon::Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
-	Super::Fire(HitTarget);
+	Super::Fire(HitTarget, StartLocation, TargetRotation);
 
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;

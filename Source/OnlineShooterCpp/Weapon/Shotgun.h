@@ -15,7 +15,7 @@ class ONLINESHOOTERCPP_API AShotgun : public AHitScanWeapon
 	GENERATED_BODY()
 
 public:
-	virtual void Fire(const FVector& HitTarget) override;
+	virtual void Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation) override;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Scatter")

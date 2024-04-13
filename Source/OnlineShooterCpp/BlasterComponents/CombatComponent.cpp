@@ -72,7 +72,12 @@ void UCombatComponent::Fire()
 {
 	if (CanFire())
 	{
-		ServerFire(HitTarget);
+		bCanFire = false;
+		// This is for when the server doesn't know abotu the client weapon mesh location yet. 
+		FVector_NetQuantize StartLocation = EquippedWeapon->GetWeaponMesh()->GetSocketLocation(FName("MuzzleFlash"));
+		FVector ToTarget = HitTarget - StartLocation;
+		FRotator TargetRotation = ToTarget.Rotation();
+		ServerFire(HitTarget, StartLocation, TargetRotation);
 		if (EquippedWeapon)
 		{
 			CrosshairShootingFactor = .75f;
@@ -166,25 +171,26 @@ void UCombatComponent::ShotgunShellReload()
 	}
 }
 
-void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
+void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
-	MulticastFire(TraceHitTarget);
+	// As long as Server agrees, call Multicast RPC to tell all clients (and server) that a client fired
+	MulticastFire(TraceHitTarget, StartLocation, TargetRotation);
 }
 
-void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
+void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
 	if (EquippedWeapon == nullptr) return;
 	if (Character && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
 	{
 		Character->PlayFireMontage(bAiming);
-		EquippedWeapon->Fire(TraceHitTarget);
+		EquippedWeapon->Fire(TraceHitTarget, StartLocation, TargetRotation);
 		CombatState = ECombatState::ECS_Unoccupied;
 		return;
 	}
 	if (Character && CombatState == ECombatState::ECS_Unoccupied)
 	{
 		Character->PlayFireMontage(bAiming);
-		EquippedWeapon->Fire(TraceHitTarget);
+		EquippedWeapon->Fire(TraceHitTarget, StartLocation, TargetRotation);
 	}
 }
 
@@ -445,29 +451,34 @@ void UCombatComponent::LaunchGrenade()
 	ShowAttachedGrenade(false);
 	if (Character && Character->IsLocallyControlled())
 	{
-		ServerLaunchGrenade(HitTarget);
+		FVector_NetQuantize StartLocation = Character->GetAttachedGrenade()->GetComponentLocation();
+		FVector ToTarget = HitTarget - StartLocation;
+		FRotator TargetRotation = ToTarget.Rotation();
+		ServerLaunchGrenade(HitTarget, StartLocation, TargetRotation);
 	}
 }
 
-void UCombatComponent::ServerLaunchGrenade_Implementation(const FVector_NetQuantize& Target)
+void UCombatComponent::ServerLaunchGrenade_Implementation(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
 	if (Character && GrenadeClass && Character->GetAttachedGrenade())
 	{
-		const FVector StartingLocation = Character->GetAttachedGrenade()->GetComponentLocation();
-		FVector ToTarget = Target - StartingLocation;
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = Character;
-		SpawnParams.Instigator = Character;
-		UWorld* World = GetWorld();
-
-		if (World)
+		APawn* InstigatorPawn = Cast<APawn>(GetOwner());
+		if (GrenadeClass && InstigatorPawn)
 		{
-			World->SpawnActor<AProjectile>(
-				GrenadeClass,
-				StartingLocation,
-				ToTarget.Rotation(),
-				SpawnParams
-			);
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = GetOwner();
+			SpawnParams.Instigator = InstigatorPawn;
+
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				World->SpawnActor<AProjectile>(
+					GrenadeClass,
+					StartLocation,
+					TargetRotation,
+					SpawnParams
+				);
+			}
 		}
 	}
 }

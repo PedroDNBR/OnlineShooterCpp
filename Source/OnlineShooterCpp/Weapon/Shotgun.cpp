@@ -8,9 +8,9 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
 
-void AShotgun::Fire(const FVector& HitTarget)
+void AShotgun::Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
-	AWeapon::Fire(HitTarget);
+	AWeapon::Fire(HitTarget, StartLocation, TargetRotation);
 
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;
