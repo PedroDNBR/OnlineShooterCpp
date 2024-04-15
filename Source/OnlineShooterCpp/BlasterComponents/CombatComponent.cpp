@@ -1,5 +1,6 @@
 #include "CombatComponent.h"
 #include "OnlineShooterCpp/Weapon/Weapon.h"
+#include "OnlineShooterCpp/Weapon/Shotgun.h"
 #include "OnlineShooterCpp/Character/BlasterCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Components/SphereComponent.h"
@@ -101,8 +102,12 @@ void UCombatComponent::Fire()
 
 void UCombatComponent::FireProjectileWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
-	LocalFire(HitTarget, StartLocation, TargetRotation);
-	ServerFire(HitTarget, StartLocation, TargetRotation);
+	if (EquippedWeapon)
+	{
+		HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
+		LocalFire(HitTarget, StartLocation, TargetRotation);
+		ServerFire(HitTarget, StartLocation, TargetRotation);
+	}
 }
 
 void UCombatComponent::FireHitScanWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
@@ -117,7 +122,12 @@ void UCombatComponent::FireHitScanWeapon(const FVector_NetQuantize& StartLocatio
 
 void UCombatComponent::FireShotgunWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
-
+	AShotgun* Shotgun = Cast<AShotgun>(EquippedWeapon);
+	if (Shotgun)
+	{
+		TArray<FVector> HitTargets;
+		Shotgun->ShotgunTraceEndWithScatter(HitTarget, HitTargets);
+	}
 }
 
 bool UCombatComponent::CanFire()

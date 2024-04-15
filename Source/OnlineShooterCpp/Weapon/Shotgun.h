@@ -16,6 +16,7 @@ class ONLINESHOOTERCPP_API AShotgun : public AHitScanWeapon
 
 public:
 	virtual void Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation) override;
+	void ShotgunTraceEndWithScatter(const FVector& HitTarget, TArray<FVector> HitTargets);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Scatter")
