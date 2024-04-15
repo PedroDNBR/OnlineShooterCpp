@@ -78,6 +78,7 @@ void UCombatComponent::Fire()
 		FVector ToTarget = HitTarget - StartLocation;
 		FRotator TargetRotation = ToTarget.Rotation();
 		ServerFire(HitTarget, StartLocation, TargetRotation);
+		LocalFire(HitTarget, StartLocation, TargetRotation);
 		if (EquippedWeapon)
 		{
 			CrosshairShootingFactor = .75f;
@@ -173,11 +174,30 @@ void UCombatComponent::ShotgunShellReload()
 
 void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
+	if (Character && Character->IsLocallyControlled() && !Character->HasAuthority()) return;
+
 	// As long as Server agrees, call Multicast RPC to tell all clients (and server) that a client fired
-	MulticastFire(TraceHitTarget, StartLocation, TargetRotation);
+	LocalFire(TraceHitTarget, StartLocation, TargetRotation);
 }
 
 void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+{
+	if (EquippedWeapon == nullptr) return;
+	if (Character && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
+	{
+		Character->PlayFireMontage(bAiming);
+		EquippedWeapon->Fire(TraceHitTarget, StartLocation, TargetRotation);
+		CombatState = ECombatState::ECS_Unoccupied;
+		return;
+	}
+	if (Character && CombatState == ECombatState::ECS_Unoccupied)
+	{
+		Character->PlayFireMontage(bAiming);
+		EquippedWeapon->Fire(TraceHitTarget, StartLocation, TargetRotation);
+	}
+}
+
+void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
 {
 	if (EquippedWeapon == nullptr) return;
 	if (Character && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
@@ -214,6 +234,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::SwapWeapons()
 {
+	if (CombatState != ECombatState::ECS_Unoccupied) return;
 	AWeapon* TempWeapon = EquippedWeapon;
 	EquippedWeapon = SecondaryWeapon;
 	SecondaryWeapon = TempWeapon;

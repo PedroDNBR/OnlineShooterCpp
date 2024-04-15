@@ -59,6 +59,8 @@ protected:
 
 	void Fire();
 
+	void LocalFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+
 	UFUNCTION(Server, Reliable)
 	void ServerFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 	UFUNCTION(NetMulticast, Reliable)

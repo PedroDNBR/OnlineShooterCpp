@@ -263,7 +263,10 @@ void AWeapon::Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLoc
 			}
 		}
 	}
-	SpendRound();
+	if (HasAuthority())
+	{
+		SpendRound();
+	}
 }
 
 void AWeapon::Dropped()
