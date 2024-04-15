@@ -58,6 +58,9 @@ protected:
 	void OnRep_SecondaryWeapon();
 
 	void Fire();
+	void FireProjectileWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void FireHitScanWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void FireShotgunWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 
 	void LocalFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
 

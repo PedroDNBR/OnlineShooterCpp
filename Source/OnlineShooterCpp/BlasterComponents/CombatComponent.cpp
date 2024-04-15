@@ -77,14 +77,47 @@ void UCombatComponent::Fire()
 		FVector_NetQuantize StartLocation = EquippedWeapon->GetWeaponMesh()->GetSocketLocation(FName("MuzzleFlash"));
 		FVector ToTarget = HitTarget - StartLocation;
 		FRotator TargetRotation = ToTarget.Rotation();
-		ServerFire(HitTarget, StartLocation, TargetRotation);
-		LocalFire(HitTarget, StartLocation, TargetRotation);
+		
 		if (EquippedWeapon)
 		{
 			CrosshairShootingFactor = .75f;
+
+			switch(EquippedWeapon->FireType)
+			{
+			case EFireType::EFT_Projectile:
+				FireProjectileWeapon(StartLocation, TargetRotation);
+				break;
+			case EFireType::EFT_HitScan:
+				FireHitScanWeapon(StartLocation, TargetRotation);
+				break;
+			case EFireType::EFT_Shotgun:
+				FireShotgunWeapon(StartLocation, TargetRotation);
+				break;
+			}
 		}
 		StartFireTimer();
 	}
+}
+
+void UCombatComponent::FireProjectileWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+{
+	LocalFire(HitTarget, StartLocation, TargetRotation);
+	ServerFire(HitTarget, StartLocation, TargetRotation);
+}
+
+void UCombatComponent::FireHitScanWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+{
+	if (EquippedWeapon)
+	{
+		HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
+		LocalFire(HitTarget, StartLocation, TargetRotation);
+		ServerFire(HitTarget, StartLocation, TargetRotation);
+	}
+}
+
+void UCombatComponent::FireShotgunWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+{
+
 }
 
 bool UCombatComponent::CanFire()
