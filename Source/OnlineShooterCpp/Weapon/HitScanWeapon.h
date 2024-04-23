@@ -14,7 +14,7 @@ class ONLINESHOOTERCPP_API AHitScanWeapon : public AWeapon
 {
 	GENERATED_BODY()
 public:
-	virtual void Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation) override;
+	virtual void Fire(const FVector& HitTarget) override;
 
 protected:
 	void WeaponTraceHit(const FVector& TraceStart, const FVector& HitTarget, FHitResult& OutHit);

@@ -40,7 +40,7 @@ public:
 	void LaunchGrenade();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerLaunchGrenade(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void ServerLaunchGrenade(const FVector_NetQuantize& TraceHitTarget);
 
 	void PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount);
 
@@ -58,16 +58,23 @@ protected:
 	void OnRep_SecondaryWeapon();
 
 	void Fire();
-	void FireProjectileWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
-	void FireHitScanWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
-	void FireShotgunWeapon(const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
-
-	void LocalFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void FireProjectileWeapon();
+	void FireHitScanWeapon();
+	void FireShotgun();
+	void LocalFire(const FVector_NetQuantize& TraceHitTarget);
+	void ShotgunLocalFire(const TArray<FVector_NetQuantize>& TraceHitTargets);
 
 	UFUNCTION(Server, Reliable)
-	void ServerFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void ServerFire(const FVector_NetQuantize& TraceHitTarget);
+
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastFire(const FVector_NetQuantize& TraceHitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation);
+	void MulticastFire(const FVector_NetQuantize& TraceHitTarget);
+
+	UFUNCTION(Server, Reliable)
+	void ServerShotgunFire(const TArray<FVector_NetQuantize>& TraceHitTargets);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastShotgunFire(const TArray<FVector_NetQuantize>& TraceHitTargets);
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
@@ -163,6 +170,7 @@ private:
 
 	bool CanFire();
 
+	// Carried ammo for the currently-equipped weapon
 	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)
 	int32 CarriedAmmo;
 

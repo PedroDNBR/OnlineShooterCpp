@@ -237,7 +237,7 @@ void AWeapon::ShowPickupWidget(bool bShowWidget)
 	}
 }
 
-void AWeapon::Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+void AWeapon::Fire(const FVector& HitTarget)
 {
 	if (FireAnimation)
 	{

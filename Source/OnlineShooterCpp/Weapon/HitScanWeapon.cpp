@@ -10,13 +10,12 @@
 #include "WeaponTypes.h"
 #include "DrawDebugHelpers.h"
 
-void AHitScanWeapon::Fire(const FVector& HitTarget, const FVector_NetQuantize& StartLocation, FRotator TargetRotation)
+void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
-	Super::Fire(HitTarget, StartLocation, TargetRotation);
+	Super::Fire(HitTarget);
 
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;
-
 	AController* InstigatorController = OwnerPawn->GetController();
 
 	const USkeletalMeshSocket* MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName("MuzzleFlash");
@@ -29,7 +28,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget, const FVector_NetQuantize& S
 		WeaponTraceHit(Start, HitTarget, FireHit);
 
 		ABlasterCharacter* BlasterCharacter = Cast<ABlasterCharacter>(FireHit.GetActor());
-		if (BlasterCharacter && InstigatorController && HasAuthority())
+		if (BlasterCharacter && HasAuthority() && InstigatorController)
 		{
 			UGameplayStatics::ApplyDamage(
 				BlasterCharacter,
