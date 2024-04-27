@@ -31,6 +31,18 @@ struct FFramePackage
 	TMap<FName, FBoxInformation> HitBoxInfo;
 };
 
+USTRUCT(BlueprintType)
+struct FServerSideRewindResult
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	bool bHitConfirmed;
+
+	UPROPERTY()
+	bool bHeadshot;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ONLINESHOOTERCPP_API ULagCompensationComponent : public UActorComponent
 {
@@ -41,7 +53,7 @@ public:
 	friend class ABlasterCharacter;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void ShowFramePackage(const FFramePackage& Package, const FColor Color); 
-	void ServerSideRewind(
+	FServerSideRewindResult ServerSideRewind(
 		class ABlasterCharacter* HitCharacter, 
 		const FVector_NetQuantize& TraceStart, 
 		const FVector_NetQuantize& HitLocation, 
@@ -53,6 +65,16 @@ protected:
 	virtual void BeginPlay() override;
 	void SaveFramePackage(FFramePackage& Package);
 	FFramePackage InterpBetweenFrames(const FFramePackage& OlderFrame, const FFramePackage& YoungerFrame, float HitTime);
+	FServerSideRewindResult ConfirmHit(
+		const FFramePackage& Package, 
+		ABlasterCharacter* HitCharacter, 
+		const FVector_NetQuantize& TraceStart, 
+		const FVector_NetQuantize& HitLocation
+	);
+	void CacheBoxPositions(ABlasterCharacter* HitCharacter, FFramePackage& OutFramePackage);
+	void MoveBoxes(ABlasterCharacter* HitCharacter, const FFramePackage& Package);
+	void ResetHitBoxes(ABlasterCharacter* HitCharacter, const FFramePackage& Package);
+	void EnableCharacterMeshCollision(ABlasterCharacter* HitCharacter, ECollisionEnabled::Type CollisionEnabled);
 
 private:
 	UPROPERTY()
