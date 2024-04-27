@@ -25,7 +25,7 @@ struct FFramePackage
 	GENERATED_BODY()
 
 	UPROPERTY()
-	float time;
+	float Time;
 
 	UPROPERTY()
 	TMap<FName, FBoxInformation> HitBoxInfo;
@@ -40,9 +40,11 @@ public:
 	ULagCompensationComponent();
 	friend class ABlasterCharacter;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+	void ShowFramePackage(const FFramePackage& Package, const FColor Color);
+
 protected:
 	virtual void BeginPlay() override;
+	void SaveFramePackage(FFramePackage& Package);
 
 private:
 	UPROPERTY()
@@ -50,6 +52,5 @@ private:
 
 	UPROPERTY()
 	class ABlasterPlayerController* Controller;
-
 
 };
