@@ -664,6 +664,10 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 		{
 			HUDPackage.CrosshairsColor = FLinearColor::White;
 		}
+		if (!TraceHitResult.bBlockingHit)
+		{
+			TraceHitResult.ImpactPoint = End;
+		}
 	}
 }
 
