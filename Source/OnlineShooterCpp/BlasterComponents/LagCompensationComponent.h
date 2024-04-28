@@ -69,7 +69,7 @@ public:
 	ULagCompensationComponent();
 	friend class ABlasterCharacter;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void ShowFramePackage(const FFramePackage& Package, const FColor Color); 
+	void ShowFramePackage(const FFramePackage& Package, const FColor& Color); 
 	FServerSideRewindResult ServerSideRewind(
 		class ABlasterCharacter* HitCharacter, 
 		const FVector_NetQuantize& TraceStart, 

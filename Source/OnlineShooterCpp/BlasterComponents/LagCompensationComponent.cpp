@@ -292,7 +292,7 @@ void ULagCompensationComponent::EnableCharacterMeshCollision(ABlasterCharacter* 
 	}
 }
 
-void ULagCompensationComponent::ShowFramePackage(const FFramePackage& Package, const FColor Color)
+void ULagCompensationComponent::ShowFramePackage(const FFramePackage& Package, const FColor& Color)
 {
 	for (auto& BoxInfo : Package.HitBoxInfo)
 	{
@@ -356,6 +356,7 @@ FFramePackage ULagCompensationComponent::GetFrameToCheck(ABlasterCharacter* HitC
 	if (NewestHistoryTime <= HitTime)
 	{
 		FrameToCheck = History.GetHead()->GetValue();
+		bShouldInterpolate = false;
 	}
 
 	TDoubleLinkedList<FFramePackage>::TDoubleLinkedListNode* Younger = History.GetHead();
@@ -380,7 +381,8 @@ FFramePackage ULagCompensationComponent::GetFrameToCheck(ABlasterCharacter* HitC
 		// Interpolate between Younger and Older
 		FrameToCheck = InterpBetweenFrames(Older->GetValue(), Younger->GetValue(), HitTime);
 	}
-	return FFramePackage();
+	FrameToCheck.Character = HitCharacter;
+	return FrameToCheck;
 }
 
 void ULagCompensationComponent::ServerScoreRequest_Implementation(ABlasterCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation, float HitTime, AWeapon* DamageCauser)
