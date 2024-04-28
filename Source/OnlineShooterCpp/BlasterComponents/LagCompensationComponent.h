@@ -16,7 +16,7 @@ struct FBoxInformation
 	FRotator Rotation;
 
 	UPROPERTY()
-	ABlasterCharacter Character;
+	FVector BoxExtent;
 };
 
 USTRUCT(BlueprintType)
