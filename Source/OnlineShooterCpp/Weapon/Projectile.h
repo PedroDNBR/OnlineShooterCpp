@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float InitialSpeed = 15000.f;
 
+	UPROPERTY(EditAnywhere)
+	float Damage = 20.f;
+
 protected:
 	virtual void BeginPlay() override;
 	void StartDestroyTimer();
@@ -36,9 +39,6 @@ protected:
 	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MultiCast_OnHit();
-
-	UPROPERTY(EditAnywhere)
-	float Damage = 20.f;
 
 	UPROPERTY(EditAnywhere)
 	class UParticleSystem* ImpactParticles;
