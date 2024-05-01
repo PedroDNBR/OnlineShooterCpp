@@ -332,6 +332,15 @@ void ABlasterCharacter::PlayThrowGrenadeMontage()
 	}
 }
 
+void ABlasterCharacter::PlaySwapMontage()
+{
+	UAnimInstance* AnimInstace = GetMesh()->GetAnimInstance();
+	if (AnimInstace && SwapMontage)
+	{
+		AnimInstace->Montage_Play(SwapMontage);
+	}
+}
+
 void ABlasterCharacter::OnRep_ReplicatedMovement()
 {
 	Super::OnRep_ReplicatedMovement();
@@ -568,7 +577,7 @@ void ABlasterCharacter::EquipButtonPressed()
 	if (bDisableGameplay) return;
 	if (Combat)
 	{
-		ServerEquipButtonPressed();
+		if (Combat->CombatState == ECombatState::ECS_Unoccupied) ServerEquipButtonPressed();
 	}
 }
 
@@ -577,7 +586,13 @@ void ABlasterCharacter::SwapWeaponButtonPressed()
 	if (bDisableGameplay) return;
 	if (Combat)
 	{
-		ServerSwapWeaponButtonPressed();
+		if(Combat->CombatState == ECombatState::ECS_Unoccupied) ServerSwapWeaponButtonPressed();
+		if (Combat->ShouldSwapWeapons() && !HasAuthority() && Combat->CombatState == ECombatState::ECS_Unoccupied) 
+		{
+			PlaySwapMontage();
+			Combat->CombatState = ECombatState::ECS_SwappingWeapons;
+			bFinishedSwapping = false;
+		}
 	}
 }
 
@@ -595,7 +610,7 @@ void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
 void ABlasterCharacter::ServerSwapWeaponButtonPressed_Implementation()
 {
 	if (Combat == nullptr) return;
-	if (Combat && Combat->ShouldSwapWeapons() && Combat->CombatState == ECombatState::ECS_Unoccupied)
+	if (Combat && Combat->ShouldSwapWeapons())
 	{
 		Combat->SwapWeapons();
 	}
