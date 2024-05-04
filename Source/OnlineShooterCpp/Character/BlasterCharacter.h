@@ -60,6 +60,12 @@ public:
 
 	FOnLeftGame OnLeftGame;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastGainedTheLead();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastLostTheLead();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -286,7 +292,7 @@ private:
 	UMaterialInstance* DissolveMaterialInstance;
 
 	/*
-	* Elim Bot
+	* Elim Effects
 	*/
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* ElimBotEffect;
@@ -299,6 +305,12 @@ private:
 
 	UPROPERTY()
 	class ABlasterPlayerState* BlasterPlayerState;
+
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* CrownSystem;
+
+	UPROPERTY()
+	class UNiagaraComponent* CrownComponent;
 
 	/*
 	* Grenade
