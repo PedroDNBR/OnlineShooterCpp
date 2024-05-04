@@ -31,8 +31,8 @@ void AProjectile::BeginPlay()
 	// Server is in charge of damage, so do hit detection there
 	if (HasAuthority())
 	{
-			CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-			CollisionBox->IgnoreActorWhenMoving(Owner, true);
+		CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+		CollisionBox->IgnoreActorWhenMoving(Owner, true);
 	}
 
 	if (Tracer)
