@@ -238,10 +238,10 @@ void UCombatComponent::ShotgunLocalFire(const TArray<FVector_NetQuantize>& Trace
 	if (Shotgun == nullptr || Character == nullptr) return;
 	if (CombatState == ECombatState::ECS_Reloading || CombatState == ECombatState::ECS_Unoccupied)
 	{
+		bLocallyReloading = false;
 		Character->PlayFireMontage(bAiming);
 		Shotgun->FireShotgun(TraceHitTargets);
 		CombatState = ECombatState::ECS_Unoccupied;
-		bLocallyReloading = false;
 	}
 }
 
@@ -405,8 +405,8 @@ void UCombatComponent::ServerReload_Implementation()
 
 void UCombatComponent::FinishReloading()
 {
-	if (Character == nullptr) return;
 	bLocallyReloading = false;
+	if (Character == nullptr) return;
 	if (Character->HasAuthority())
 	{
 		CombatState = ECombatState::ECS_Unoccupied;
