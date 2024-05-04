@@ -55,7 +55,6 @@ void ABlasterGameMode::Tick(float DeltaTime)
 			RestartGame();
 		}
 	}
-
 }
 
 void ABlasterGameMode::OnMatchStateSet()
@@ -70,6 +69,11 @@ void ABlasterGameMode::OnMatchStateSet()
 			BlasterPlayer->OnMatchStateSet(MatchState);
 		}
 	}
+}
+
+float ABlasterGameMode::CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage)
+{
+	return BaseDamage;
 }
 
 void ABlasterGameMode::PlayerEliminated(ABlasterCharacter* ElimnedCharacter, ABlasterPlayerController* VictimController, ABlasterPlayerController* AttackerController)
