@@ -8,6 +8,7 @@
 #include "OnlineShooterCpp/Types/CombatState.h"
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
+#include "OnlineShooterCpp/Types/Team.h"
 #include "BlasterCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLeftGame);
@@ -65,6 +66,8 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastLostTheLead();
+
+	void SetTeamColor(ETeam Team);
 
 protected:
 	// Called when the game starts or when spawned
@@ -288,8 +291,26 @@ private:
 	UMaterialInstanceDynamic* DynamicDissolveMaterialInstance;
 
 	// Material instance set on blueprint, used with the dynamic material instance
-	UPROPERTY(EditAnywhere, Category = "Elim")
+	UPROPERTY(VisibleAnywhere, Category = "Elim")
 	UMaterialInstance* DissolveMaterialInstance;
+
+	/*
+	* Team Colors
+	*/
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* RedDissolveMatInst;
+
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* RedMaterial;
+
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* BlueDissolveMatInst;
+
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* BlueMaterial;
+
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	UMaterialInstance* OriginalMaterial;
 
 	/*
 	* Elim Effects
