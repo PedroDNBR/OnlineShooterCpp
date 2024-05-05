@@ -10,6 +10,10 @@ AFlag::AFlag()
 	SetRootComponent(FlagPole);
 	GetAreaSphere()->SetupAttachment(FlagPole);
 	GetPickupWidget()->SetupAttachment(FlagPole);
+	FlagPole->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	FlagPole->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FlagMesh = CreateDefaultSubobject <USkeletalMeshComponent> (TEXT("FlagMesh"));
 	FlagMesh->SetupAttachment(FlagPole);
+	FlagMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	FlagMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
