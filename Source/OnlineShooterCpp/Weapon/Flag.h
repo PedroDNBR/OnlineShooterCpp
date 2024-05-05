@@ -15,6 +15,7 @@ class ONLINESHOOTERCPP_API AFlag : public AWeapon
 	GENERATED_BODY()
 public:
 	AFlag();
+	virtual void Dropped() override;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -23,4 +24,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent *FlagMesh;
 	
+protected:
+	virtual void OnEquipped() override;
+	virtual void OnDropped() override;
+
 };
