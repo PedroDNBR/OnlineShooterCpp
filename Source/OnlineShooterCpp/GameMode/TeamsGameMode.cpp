@@ -1,6 +1,7 @@
 #include "TeamsGameMode.h"
 #include "OnlineShooterCpp/GameState/BlasterGameState.h"
 #include "OnlineShooterCpp/PlayerState/BlasterPlayerState.h"
+#include "OnlineShooterCpp/PlayerController/BlasterPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 ATeamsGameMode::ATeamsGameMode()
@@ -91,4 +92,23 @@ float ATeamsGameMode::CalculateDamage(AController* Attacker, AController* Victim
 		return 0.f;
 	}
 	return BaseDamage;
+}
+
+void ATeamsGameMode::PlayerEliminated(ABlasterCharacter* ElimnedCharacter, ABlasterPlayerController* VictimController, ABlasterPlayerController* AttackerController)
+{
+	Super::PlayerEliminated(ElimnedCharacter, VictimController, AttackerController);
+
+	ABlasterGameState* BGameState = Cast<ABlasterGameState>(UGameplayStatics::GetGameState(this));
+	ABlasterPlayerState* AttackerPlayerState = AttackerController ? Cast<ABlasterPlayerState>(AttackerController->PlayerState) : nullptr ;
+	if (BGameState && AttackerPlayerState)
+	{
+		if (AttackerPlayerState->GetTeam() == ETeam::ET_BlueTeam)
+		{
+			BGameState->BlueTeamScores();
+		}
+		if (AttackerPlayerState->GetTeam() == ETeam::ET_RedTeam)
+		{
+			BGameState->RedTeamScores();
+		}
+	}
 }
