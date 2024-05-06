@@ -53,7 +53,11 @@ private:
 	// The subsystem designed to handle all the online sessions functionality
 	class UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem;
 
-	int32 NumPublicConnections{8};
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 NumPublicConnections{20};
+
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FString MatchType{TEXT("FreeForAll")};
 	FString PathToLobby{ TEXT("") };
 };
