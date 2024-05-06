@@ -16,6 +16,7 @@ class ONLINESHOOTERCPP_API AFlag : public AWeapon
 public:
 	AFlag();
 	virtual void Dropped() override;
+	void ResetFlag();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -27,5 +28,11 @@ private:
 protected:
 	virtual void OnEquipped() override;
 	virtual void OnDropped() override;
+	virtual void BeginPlay() override;
+
+	FTransform InitialTransform;
+
+public:
+	FORCEINLINE FTransform GetInitialTransform() const { return InitialTransform; }
 
 };

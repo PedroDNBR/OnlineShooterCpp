@@ -247,6 +247,10 @@ void ABlasterCharacter::RotateInPlace(float DeltaTime)
 		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 		return;
 	}
+
+	if (Combat && Combat->EquippedWeapon) bUseControllerRotationYaw = true;
+	if (Combat && Combat->EquippedWeapon) GetCharacterMovement()->bOrientRotationToMovement = false;
+
 	if (bDisableGameplay)
 	{
 		bUseControllerRotationYaw = false;
@@ -1128,4 +1132,10 @@ ETeam ABlasterCharacter::GetTeam()
 	BlasterPlayerState = BlasterPlayerState == nullptr ? GetPlayerState<ABlasterPlayerState>() : BlasterPlayerState;
 	if (BlasterPlayerState == nullptr) return ETeam::ET_NoTeam;
 	return BlasterPlayerState->GetTeam();
+}
+
+void ABlasterCharacter::SetHoldingTheFlag(bool bHolding)
+{
+	if (Combat == nullptr) return;
+	Combat->bHoldingTheFlag = bHolding;
 }
