@@ -12,26 +12,6 @@ void ABlasterHUD::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABlasterHUD::AddCharacterOverlay()
-{
-	APlayerController* PlayerController = GetOwningPlayerController();
-	if (PlayerController && CharacterOverlayClass)
-	{
-		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
-		CharacterOverlay->AddToViewport();
-	}
-}
-
-void ABlasterHUD::AddAnnouncement()
-{
-	APlayerController* PlayerController = GetOwningPlayerController();
-	if (PlayerController && AnnouncementClass)
-	{
-		Announcement = CreateWidget<UAnnouncement>(PlayerController, AnnouncementClass);
-		Announcement->AddToViewport();
-	}
-}
-
 void ABlasterHUD::AddElimAnnouncement(FString Attacker, FString Victim)
 {
 	OwningPlayer = OwningPlayer == nullptr ? GetOwningPlayerController() : OwningPlayer;
@@ -43,7 +23,7 @@ void ABlasterHUD::AddElimAnnouncement(FString Attacker, FString Victim)
 			ElimAnnouncementWidget->SetElimAnnouncementText(Attacker, Victim);
 			ElimAnnouncementWidget->AddToViewport();
 
-			for(UElimAnnouncement* Msg : ElimMessages)
+			for (UElimAnnouncement* Msg : ElimMessages)
 			{
 				if (Msg && Msg->AnnouncementBox)
 				{
@@ -58,8 +38,9 @@ void ABlasterHUD::AddElimAnnouncement(FString Attacker, FString Victim)
 						CanvasSlot->SetPosition(NewPosition);
 					}
 				}
-				
 			}
+
+
 
 			ElimMessages.Add(ElimAnnouncementWidget);
 
@@ -81,6 +62,26 @@ void ABlasterHUD::ElimAnnouncementTimerFinished(UElimAnnouncement* MsgToRemove)
 	if (MsgToRemove)
 	{
 		MsgToRemove->RemoveFromParent();
+	}
+}
+
+void ABlasterHUD::AddCharacterOverlay()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (PlayerController && CharacterOverlayClass)
+	{
+		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
+		CharacterOverlay->AddToViewport();
+	}
+}
+
+void ABlasterHUD::AddAnnouncement()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (PlayerController && AnnouncementClass)
+	{
+		Announcement = CreateWidget<UAnnouncement>(PlayerController, AnnouncementClass);
+		Announcement->AddToViewport();
 	}
 }
 

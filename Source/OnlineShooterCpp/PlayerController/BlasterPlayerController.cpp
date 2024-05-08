@@ -38,7 +38,7 @@ void ABlasterPlayerController::ClientElimAnnouncement_Implementation(APlayerStat
 				BlasterHUD->AddElimAnnouncement(Attacker->GetPlayerName(), "you");
 				return;
 			}
-			if (Victim == Self && Attacker == Self)
+			if (Attacker == Victim && Attacker == Self)
 			{
 				BlasterHUD->AddElimAnnouncement("You", "yourself");
 				return;
@@ -50,7 +50,6 @@ void ABlasterPlayerController::ClientElimAnnouncement_Implementation(APlayerStat
 			}
 
 			BlasterHUD->AddElimAnnouncement(Attacker->GetPlayerName(), Victim->GetPlayerName());
-			return;
 		}
 	}
 }
@@ -151,6 +150,7 @@ void ABlasterPlayerController::Tick(float DeltaTime)
 
 void ABlasterPlayerController::CheckPing(float DeltaTime)
 {
+	if (HasAuthority()) return;
 	HighPingRunningTime += DeltaTime;
 	if (HighPingRunningTime > CheckPingFrequency)
 	{
@@ -168,11 +168,10 @@ void ABlasterPlayerController::CheckPing(float DeltaTime)
 				ServerReportPingStatus(false);
 			}
 		}
-		HighPingRunningTime = 0;
+		HighPingRunningTime = 0.f;
 	}
 	bool bHighPingAnimationPlaying =
-		BlasterHUD &&
-		BlasterHUD->CharacterOverlay &&
+		BlasterHUD && BlasterHUD->CharacterOverlay &&
 		BlasterHUD->CharacterOverlay->HighPingAnimation &&
 		BlasterHUD->CharacterOverlay->IsAnimationPlaying(BlasterHUD->CharacterOverlay->HighPingAnimation);
 	if (bHighPingAnimationPlaying)
@@ -252,6 +251,7 @@ void ABlasterPlayerController::HighPingWarning()
 		);
 	}
 }
+
 void ABlasterPlayerController::StopHighPingWarning()
 {
 	BlasterHUD = BlasterHUD == nullptr ? Cast<ABlasterHUD>(GetHUD()) : BlasterHUD;
@@ -281,11 +281,6 @@ void ABlasterPlayerController::ServerCheckMatchState_Implementation()
 		LevelStartingTime = GameMode->LevelStartingTime;
 		MatchState = GameMode->GetMatchState();
 		ClientJoinMidgame(MatchState, WarmupTime, MatchTime, CooldownTime, LevelStartingTime);
-
-		if (BlasterHUD && MatchState == MatchState::WaitingToStart)
-		{
-			BlasterHUD->AddAnnouncement();
-		}
 	}
 }
 
@@ -319,9 +314,9 @@ void ABlasterPlayerController::OnPossess(APawn* InPawn)
 void ABlasterPlayerController::SetHUDHealth(float Health, float MaxHealth)
 {
 	BlasterHUD = BlasterHUD == nullptr ? Cast<ABlasterHUD>(GetHUD()) : BlasterHUD;
-	bool bHUDValid = BlasterHUD && 
-		BlasterHUD->CharacterOverlay && 
-		BlasterHUD->CharacterOverlay->HealthBar && 
+	bool bHUDValid = BlasterHUD &&
+		BlasterHUD->CharacterOverlay &&
+		BlasterHUD->CharacterOverlay->HealthBar &&
 		BlasterHUD->CharacterOverlay->HealthText;
 
 	if (bHUDValid)
@@ -444,7 +439,6 @@ void ABlasterPlayerController::SetHUDMatchCountdown(float CountdownTime)
 	bool bHUDValid = BlasterHUD &&
 		BlasterHUD->CharacterOverlay &&
 		BlasterHUD->CharacterOverlay->MatchCountdownText;
-
 	if (bHUDValid)
 	{
 		if (CountdownTime < 0.f)
@@ -512,6 +506,11 @@ void ABlasterPlayerController::SetHUDTime()
 	
 	if (HasAuthority())
 	{
+		if (BlasterGameMode == nullptr)
+		{
+			BlasterGameMode = Cast<ABlasterGameMode>(UGameplayStatics::GetGameMode(this));
+			LevelStartingTime = BlasterGameMode->LevelStartingTime;
+		}
 		BlasterGameMode = BlasterGameMode == nullptr ? Cast<ABlasterGameMode>(UGameplayStatics::GetGameMode(this)) : BlasterGameMode;
 		if (BlasterGameMode)
 		{
@@ -579,16 +578,15 @@ void ABlasterPlayerController::ServerRequestServerTime_Implementation(float Time
 void ABlasterPlayerController::ClientReportServerTime_Implementation(float TimeOfClientRequest, float TimeServerReceivedClientRequest)
 {
 	float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfClientRequest;
-	SingleTripTime = .5f * RoundTripTime;
-	float CurrentServerTime = TimeServerReceivedClientRequest + (.5f * RoundTripTime);
+	SingleTripTime = 0.5f * RoundTripTime;
+	float CurrentServerTime = TimeServerReceivedClientRequest + SingleTripTime;
 	ClientServerDelta = CurrentServerTime - GetWorld()->GetTimeSeconds();
 }
 
 float ABlasterPlayerController::GetServerTime()
 {
 	if (HasAuthority()) return GetWorld()->GetTimeSeconds();
-	
-	return GetWorld()->GetTimeSeconds() + ClientServerDelta;
+	else return GetWorld()->GetTimeSeconds() + ClientServerDelta;
 }
 
 void ABlasterPlayerController::ReceivedPlayer()
@@ -629,7 +627,7 @@ void ABlasterPlayerController::OnRep_MatchState()
 
 void ABlasterPlayerController::HandleMatchHasStarted(bool bTeamsMatch)
 {
-	if(HasAuthority()) bShowTeamScores = bTeamsMatch;
+	if (HasAuthority()) bShowTeamScores = bTeamsMatch;
 	BlasterHUD = BlasterHUD == nullptr ? Cast<ABlasterHUD>(GetHUD()) : BlasterHUD;
 	if (BlasterHUD)
 	{
@@ -639,8 +637,7 @@ void ABlasterPlayerController::HandleMatchHasStarted(bool bTeamsMatch)
 			BlasterHUD->Announcement->SetVisibility(ESlateVisibility::Hidden);
 		}
 		if (!HasAuthority()) return;
-
-		if (bShowTeamScores)
+		if (bTeamsMatch)
 		{
 			InitTeamScores();
 		}
@@ -657,8 +654,8 @@ void ABlasterPlayerController::HandleCooldown()
 	if (BlasterHUD)
 	{
 		BlasterHUD->CharacterOverlay->RemoveFromParent();
-		bool bHUDValid = BlasterHUD->Announcement &&
-			BlasterHUD->Announcement->AnnouncementText &&
+		bool bHUDValid = BlasterHUD->Announcement && 
+			BlasterHUD->Announcement->AnnouncementText && 
 			BlasterHUD->Announcement->InfoText;
 
 		if (bHUDValid)
