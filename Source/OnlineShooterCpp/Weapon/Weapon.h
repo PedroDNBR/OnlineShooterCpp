@@ -88,6 +88,7 @@ public:
 	*/
 	void EnableCustomDepth(bool bEnable);
 
+	UPROPERTY(EditAnywhere)
 	bool bDestroyWeapon = false;
 
 	UPROPERTY(EditAnywhere)

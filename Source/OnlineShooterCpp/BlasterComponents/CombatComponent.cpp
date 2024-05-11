@@ -264,6 +264,7 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 		if (EquippedWeapon != nullptr && SecondaryWeapon == nullptr)
 		{
 			EquipSecondaryWeapon(WeaponToEquip);
+			SwapWeapons();
 		}
 		else
 		{

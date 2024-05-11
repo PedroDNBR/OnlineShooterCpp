@@ -224,18 +224,41 @@ void AWeapon::OnEquipped()
 	EnableCustomDepth(false);
 
 	BlasterOwnerCharacter = BlasterOwnerCharacter == nullptr ? Cast<ABlasterCharacter>(GetOwner()) : BlasterOwnerCharacter;
-	if (BlasterOwnerCharacter && bUseServerSideRewind)
+	if (BlasterOwnerCharacter)
 	{
-		BlasterOwnerController = BlasterOwnerController == nullptr ? Cast<ABlasterPlayerController>(BlasterOwnerCharacter->Controller) : BlasterOwnerController;
-		if (BlasterOwnerController && HasAuthority() && !BlasterOwnerController->HighPingDelegate.IsBound())
+		if (BlasterOwnerCharacter)
 		{
-			BlasterOwnerController->HighPingDelegate.AddDynamic(this, &AWeapon::OnPingTooHigh);
+			if (BlasterOwnerCharacter->SniperScopeWidget != nullptr)
+			{
+				if (BlasterOwnerCharacter->SniperScopeWidget->IsInViewport())
+				{
+					BlasterOwnerCharacter->SniperScopeWidget->RemoveFromViewport();
+					BlasterOwnerCharacter->SniperScopeWidget = nullptr;
+				}
+			}
+			if (BlasterOwnerCharacter->IsAiming() && WeaponType == EWeaponType::EWT_SniperRifle)
+			{
+				BlasterOwnerCharacter->ShowSniperScopeWidget(true);
+			}
 		}
+		if (bUseServerSideRewind)
+		{
+			BlasterOwnerController = BlasterOwnerController == nullptr ? Cast<ABlasterPlayerController>(BlasterOwnerCharacter->Controller) : BlasterOwnerController;
+			if (BlasterOwnerController && HasAuthority() && !BlasterOwnerController->HighPingDelegate.IsBound())
+			{
+				BlasterOwnerController->HighPingDelegate.AddDynamic(this, &AWeapon::OnPingTooHigh);
+			}
+		}
+		
 	}
 }
 
 void AWeapon::OnDropped()
 {
+	if (bDestroyWeapon)
+	{
+		Destroy();
+	}
 	if (HasAuthority())
 	{
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);

@@ -45,11 +45,14 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowSniperScopeWidget(bool bShowScope);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UUserWidget* SniperScopeWidget;
+
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
 	void UpdateHUDAmmo();
 
-	void SpawnDefaultWeapon();\
+	void SpawnDefaultWeapon();
 
 	UPROPERTY()
 	TMap<FName, class UBoxComponent*> HitCollisionBoxes;
