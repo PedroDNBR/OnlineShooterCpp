@@ -407,8 +407,17 @@ void UCombatComponent::ReloadEmptyWeapon()
 	}
 }
 
+void UCombatComponent::UpdateCombatState_Implementation()
+{
+	CombatState = ECombatState::ECS_Unoccupied;
+}
+
 void UCombatComponent::Reload()
 {
+	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Reloading && EquippedWeapon && !EquippedWeapon->IsFull() && !bLocallyReloading)
+	{
+		UpdateCombatState();
+	}
 	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccupied && EquippedWeapon && !EquippedWeapon->IsFull() && !bLocallyReloading)
 	{
 		ServerReload();
@@ -420,8 +429,10 @@ void UCombatComponent::Reload()
 void UCombatComponent::ServerReload_Implementation()
 {
 	if (Character == nullptr || EquippedWeapon == nullptr) return;
-
-	CombatState = ECombatState::ECS_Reloading;
+	if (CombatState == ECombatState::ECS_Unoccupied)
+	{
+		CombatState = ECombatState::ECS_Reloading;
+	}
 	if(!Character->IsLocallyControlled()) HandleReload();
 }
 
@@ -433,10 +444,6 @@ void UCombatComponent::FinishReloading()
 	{
 		CombatState = ECombatState::ECS_Unoccupied;
 		UpdateAmmoValues();
-	}
-	if (bFireButtonPressed)
-	{
-		Fire();
 	}
 }
 

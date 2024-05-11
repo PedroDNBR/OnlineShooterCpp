@@ -90,6 +90,9 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerReload();
 
+	UFUNCTION(Server, Reliable)
+	void UpdateCombatState();
+
 	void HandleReload();
 	int32 AmountToReload();
 

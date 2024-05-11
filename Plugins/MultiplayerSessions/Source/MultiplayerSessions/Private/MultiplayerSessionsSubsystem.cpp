@@ -175,6 +175,15 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
 	{
 		bCreateSessionOnDestroy = false;
 		CreateSession(LastNumPublicConnections, LastMatchType);
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				15.f,
+				FColor::Green,
+				FString(TEXT("%d"), LastNumPublicConnections)
+			);
+		}
 	}
 	MultiplayerOnDestroySessionComplete.Broadcast(bWasSuccessful);
 }

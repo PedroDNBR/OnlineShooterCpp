@@ -160,6 +160,8 @@ ABlasterCharacter::ABlasterCharacter()
 			Box.Value->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
+
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
 void ABlasterCharacter::MulticastGainedTheLead_Implementation()
@@ -327,7 +329,7 @@ void ABlasterCharacter::PostInitializeComponents()
 
 void ABlasterCharacter::PlayFireMontage(bool bAiming)
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || Combat->CombatState != ECombatState::ECS_Unoccupied) return;
 
 	UAnimInstance* AnimInstace = GetMesh()->GetAnimInstance();
 	if (AnimInstace && FireWeaponMontage)
@@ -390,7 +392,7 @@ void ABlasterCharacter::PlayElimMontage()
 void ABlasterCharacter::PlayThrowGrenadeMontage()
 {
 	UAnimInstance* AnimInstace = GetMesh()->GetAnimInstance();
-	if (AnimInstace && ThrowGrenadeMontage)
+	if (AnimInstace && ThrowGrenadeMontage && Combat->CombatState != ECombatState::ECS_Unoccupied)
 	{
 		AnimInstace->Montage_Play(ThrowGrenadeMontage);
 	}
@@ -597,6 +599,7 @@ void ABlasterCharacter::ServerLeaveGame_Implementation()
 void ABlasterCharacter::PlayHitReactMontage()
 {
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+	if (Combat->CombatState != ECombatState::ECS_Unoccupied) return;
 
 	UAnimInstance* AnimInstace = GetMesh()->GetAnimInstance();
 	if (AnimInstace && HitReactMontage)
@@ -1010,7 +1013,7 @@ void ABlasterCharacter::SpawnDefaultWeapon()
 {
 	BlasterGameMode = BlasterGameMode == nullptr ? GetWorld()->GetAuthGameMode<ABlasterGameMode>() : BlasterGameMode;
 	UWorld* World = GetWorld();
-	if (BlasterGameMode && World && !bElimned && DefaultWeaponClass)
+	if (BlasterGameMode && World && !bElimned && DefaultWeaponClass && Combat->EquippedWeapon == nullptr)
 	{
 		AWeapon* StartingWeapon = World->SpawnActor<AWeapon>(DefaultWeaponClass);
 		StartingWeapon->bDestroyWeapon = true;
