@@ -612,6 +612,7 @@ void ABlasterCharacter::PlayHitReactMontage()
 
 void ABlasterCharacter::GrenadeButtonPressed()
 {
+	if (bDisableGameplay) return;
 	if (Combat)
 	{
 		if (Combat->bHoldingTheFlag) return;
