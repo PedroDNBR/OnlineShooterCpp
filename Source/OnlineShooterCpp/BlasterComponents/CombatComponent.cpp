@@ -190,8 +190,8 @@ bool UCombatComponent::ServerFire_Validate(const FVector_NetQuantize& TraceHitTa
 {
 	if (EquippedWeapon)
 	{
-		bool bNearlyEqual = FMath::IsNearlyEqual(EquippedWeapon->FireDelay, FireDelay, 0.005f);
-		return bNearlyEqual;
+		//bool bNearlyEqual = FMath::IsNearlyEqual(EquippedWeapon->FireDelay, FireDelay, 0.1f);
+		// return bNearlyEqual;
 	}
 	return true;
 }
@@ -264,7 +264,6 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 		if (EquippedWeapon != nullptr && SecondaryWeapon == nullptr)
 		{
 			EquipSecondaryWeapon(WeaponToEquip);
-			SwapWeapons();
 		}
 		else
 		{
@@ -443,8 +442,8 @@ void UCombatComponent::FinishReloading()
 	if (Character == nullptr) return;
 	if (Character->HasAuthority())
 	{
-		CombatState = ECombatState::ECS_Unoccupied;
 		UpdateAmmoValues();
+		CombatState = ECombatState::ECS_Unoccupied;
 	}
 }
 

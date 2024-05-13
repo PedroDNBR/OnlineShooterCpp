@@ -16,5 +16,6 @@ class ONLINESHOOTERCPP_API ALobbyGameMode : public AGameMode
 
 	public:
 		virtual void PostLogin(APlayerController* NewPlayer) override;
-	
+		UFUNCTION(BlueprintCallable)
+		void ForceStartMatch();
 };

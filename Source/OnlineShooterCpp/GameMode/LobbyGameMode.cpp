@@ -44,3 +44,37 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 
 	
 }
+
+void ALobbyGameMode::ForceStartMatch()
+{
+	UGameInstance* GameInstance = GetGameInstance();
+	if (GameInstance)
+	{
+		UMultiplayerSessionsSubsystem* Subsystem = GameInstance->GetSubsystem<UMultiplayerSessionsSubsystem>();
+		check(Subsystem);
+
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			bUseSeamlessTravel = true;
+
+			FString MatchType = Subsystem->DesiredMatchType;
+			if (MatchType == "FreeForAll")
+			{
+				World->ServerTravel(FString("/Game/Maps/FreeForAll?listen"));
+			}
+			else if (MatchType == "Teams")
+			{
+				World->ServerTravel(FString("/Game/Maps/Teams?listen"));
+			}
+			else if (MatchType == "CaptureTheFlag")
+			{
+				World->ServerTravel(FString("/Game/Maps/CaptureTheFlag?listen"));
+			}
+			else
+			{
+				World->ServerTravel(FString("/Game/Maps/FreeForAll?listen"));
+			}
+		}
+	}
+}

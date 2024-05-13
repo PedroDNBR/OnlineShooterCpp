@@ -226,20 +226,17 @@ void AWeapon::OnEquipped()
 	BlasterOwnerCharacter = BlasterOwnerCharacter == nullptr ? Cast<ABlasterCharacter>(GetOwner()) : BlasterOwnerCharacter;
 	if (BlasterOwnerCharacter)
 	{
-		if (BlasterOwnerCharacter)
+		if (BlasterOwnerCharacter->SniperScopeWidget != nullptr && BlasterOwnerCharacter->IsLocallyControlled())
 		{
-			if (BlasterOwnerCharacter->SniperScopeWidget != nullptr)
+			if (BlasterOwnerCharacter->SniperScopeWidget->IsInViewport())
 			{
-				if (BlasterOwnerCharacter->SniperScopeWidget->IsInViewport())
-				{
-					BlasterOwnerCharacter->SniperScopeWidget->RemoveFromViewport();
-					BlasterOwnerCharacter->SniperScopeWidget = nullptr;
-				}
+				BlasterOwnerCharacter->SniperScopeWidget->RemoveFromViewport();
+				BlasterOwnerCharacter->SniperScopeWidget = nullptr;
 			}
-			if (BlasterOwnerCharacter->IsAiming() && WeaponType == EWeaponType::EWT_SniperRifle)
-			{
-				BlasterOwnerCharacter->ShowSniperScopeWidget(true);
-			}
+		}
+		if (BlasterOwnerCharacter->IsAiming() && WeaponType == EWeaponType::EWT_SniperRifle && BlasterOwnerCharacter->IsLocallyControlled())
+		{
+			BlasterOwnerCharacter->ShowSniperScopeWidget(true);
 		}
 		if (bUseServerSideRewind)
 		{
@@ -249,7 +246,6 @@ void AWeapon::OnEquipped()
 				BlasterOwnerController->HighPingDelegate.AddDynamic(this, &AWeapon::OnPingTooHigh);
 			}
 		}
-		
 	}
 }
 

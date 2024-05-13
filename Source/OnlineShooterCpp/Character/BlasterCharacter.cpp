@@ -218,10 +218,17 @@ void ABlasterCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	SpawnDefaultWeapon();
-	UpdateHUDAmmo();
 
+	UpdateHUDAmmo();
 	UpdateHUDHealth();
 	UpdateHUDShield();
+
+	BlasterPlayerController = BlasterPlayerController == nullptr ? Cast<ABlasterPlayerController>(Controller) : BlasterPlayerController;
+	if (BlasterPlayerController)
+	{
+		BlasterPlayerController->SetHUDHideOrShowTeamScore();
+	}
+	
 	if (HasAuthority())
 	{
 		OnTakeAnyDamage.AddDynamic(this, &ABlasterCharacter::ReceiveDamage);
@@ -706,7 +713,19 @@ void ABlasterCharacter::EquipButtonPressed()
 	if (Combat)
 	{
 		if (Combat->bHoldingTheFlag) return;
-		if (Combat->CombatState == ECombatState::ECS_Unoccupied) ServerEquipButtonPressed();
+		if (Combat->EquippedWeapon != nullptr && Combat->SecondaryWeapon == nullptr)
+		{
+			if (Combat->CombatState == ECombatState::ECS_Unoccupied) ServerEquipButtonPressed();
+			if (Combat->CombatState == ECombatState::ECS_Unoccupied && OverlappingWeapon) ServerSwapWeaponButtonPressed();
+			if (OverlappingWeapon && IsLocallyControlled() && !HasAuthority() && Combat->CombatState == ECombatState::ECS_Unoccupied)
+			{
+				PlaySwapMontage();
+			}
+		}
+		else
+		{
+			if (Combat->CombatState == ECombatState::ECS_Unoccupied) ServerEquipButtonPressed();
+		}
 	}
 }
 
@@ -898,6 +917,10 @@ void ABlasterCharacter::FireButtonPressed()
 	if (bDisableGameplay) return;
 	if (Combat)
 	{
+		if (Combat->EquippedWeapon && Combat->EquippedWeapon->IsEmpty())
+		{
+			ReloadButtonPressed();
+		}
 		Combat->FireButtonPressed(true);
 	}
 }
@@ -1051,6 +1074,7 @@ void ABlasterCharacter::PollInit()
 			UpdateHUDAmmo();
 			UpdateHUDHealth();
 			UpdateHUDShield();
+			BlasterPlayerController->SetHUDHideOrShowTeamScore();
 		}
 	}
 }

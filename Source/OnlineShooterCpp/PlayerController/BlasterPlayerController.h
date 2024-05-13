@@ -33,6 +33,7 @@ public:
 	void InitTeamScores();
 	void SetHUDRedTeamScore(int32 RedScore);
 	void SetHUDBlueTeamScore(int32 BlueScore);
+	void SetHUDHideOrShowTeamScore();
 
 	virtual float GetServerTime(); // Synced with server world client
 	virtual void ReceivedPlayer() override; // Sync with server clock as soon as possible
@@ -152,6 +153,8 @@ private:
 
 	bool bInitializeWeaponAmmo = false;
 	float HUDWeaponAmmo;
+
+	bool bInitializeShowTeamsScore = false;
 
 	float HighPingRunningTime = 0.f;
 
