@@ -11,22 +11,22 @@ OnlineShooterCpp is a game developed through the <a href="https://www.udemy.com/
 
 ### Screenshots:
 
-<img src="https://www.mediafire.com/convkey/dc8d/a5mrarzf9l8cengzg.jpg" width="49%" align="left" />
+<img src="https://www.mediafire.com/convkey/dc8d/a5mrarzf9l8cengzg.jpg" width="45%" align="left" />
 
-<img src="https://www.mediafire.com/convkey/44b5/0xt8jdm3ks1slg4zg.jpg" width="49%" />
+<img src="https://www.mediafire.com/convkey/44b5/0xt8jdm3ks1slg4zg.jpg" width="45%" />
 
-<img src="https://www.mediafire.com/convkey/6d03/o2ztnp6ng4o83g6zg.jpg" width="49%" align="left" />
+<img src="https://www.mediafire.com/convkey/6d03/o2ztnp6ng4o83g6zg.jpg" width="45%" align="left" />
 
-<img src="https://www.mediafire.com/convkey/04d4/h7ngoy8z3uu14ebzg.jpg" width="49%" />
+<img src="https://www.mediafire.com/convkey/04d4/h7ngoy8z3uu14ebzg.jpg" width="45%" />
 
-<img src="https://www.mediafire.com/convkey/e127/mmk854hfcxc0hgczg.jpg" width="49%" align="left" />
+<img src="https://www.mediafire.com/convkey/e127/mmk854hfcxc0hgczg.jpg" width="45%" align="left" />
 
-<img src="https://www.mediafire.com/convkey/32df/1yu7cgy2lbzyrnvzg.jpg" width="49%" />
+<img src="https://www.mediafire.com/convkey/32df/1yu7cgy2lbzyrnvzg.jpg" width="45%" />
 
-<img src="https://www.mediafire.com/convkey/97e9/zrlv062oi9vzk3czg.jpg" width="49%" align="left" />
+<img src="https://www.mediafire.com/convkey/97e9/zrlv062oi9vzk3czg.jpg" width="45%" align="left" />
 
-<img src="https://www.mediafire.com/convkey/1071/yf3u2rcc9n2c7czzg.jpg" width="49%" />
+<img src="https://www.mediafire.com/convkey/1071/yf3u2rcc9n2c7czzg.jpg" width="45%" />
 
-<img src="https://www.mediafire.com/convkey/cd72/bzaf6qoye4mdrphzg.jpg" width="49%" align="left" />
+<img src="https://www.mediafire.com/convkey/cd72/bzaf6qoye4mdrphzg.jpg" width="45%" align="left" />
 
-<img src="https://www.mediafire.com/convkey/a67a/2y6k2ophad17qjjzg.jpg" width="49%" />
+<img src="https://www.mediafire.com/convkey/a67a/2y6k2ophad17qjjzg.jpg" width="45%" />
