@@ -7,7 +7,7 @@ OnlineShooterCpp is a game developed through the <a href="https://www.udemy.com/
 
 ### You can watch the gameplay here:
 
-<a href="https://youtu.be/vR1EUbcwaUs" target="_blank"><img src="https://www.mediafire.com/convkey/7685/ouwsz4yhxvbus30zg.jpg" width="1080"/></a>
+<a href="https://youtu.be/vR1EUbcwaUs" target="_blank">[![Video Thumbnail](https://img.youtube.com/vi/vR1EUbcwaUs/0.jpg)](https://youtu.be/vR1EUbcwaUs)</a>
 
 ### Screenshots:
 
