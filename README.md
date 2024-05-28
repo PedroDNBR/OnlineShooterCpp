@@ -3,6 +3,8 @@
 OnlineShooterCpp is a game developed through the <a href="https://www.udemy.com/course/unreal-engine-5-cpp-multiplayer-shooter/">Unreal Engine 5 C++ Multiplayer Shooter</a> course. It's a straightforward third-person shooter featuring three game modes: Free for All, Team Deathmatch, and Capture the Flag.
 > Features: Custom Online Multiplayer Subsystem plugin derived from the Online Steam Subsystem, Raycast and Projectile Weapons, Server Side Rewind, IK, Three different game modes.
 
+> Made using: Unreal Engine 5, Blender, Mixamo and free assets.
+
 - <a href="https://drive.google.com/file/d/1N6cOU12BLsj4_wmu9szATQoVl45ySI6i/view">Click here to download the game</a>
 
 ### You can watch the gameplay here:
